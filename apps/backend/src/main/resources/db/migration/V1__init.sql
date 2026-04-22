@@ -55,11 +55,18 @@ CREATE TABLE application_status_history (
 );
 
 -- Usuarios para autenticación JWT
+CREATE TYPE user_role AS ENUM (
+  'ADMIN',
+  'USER',
+  'ANALYST',
+  'RISK_MANAGER'
+);
+
 CREATE TABLE app_users (
     id            UUID         PRIMARY KEY DEFAULT gen_random_uuid(),
     username      VARCHAR(100) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
-    role          VARCHAR(30)  NOT NULL DEFAULT 'USER',
+    role          user_role  NOT NULL DEFAULT 'USER',
     created_at    TIMESTAMPTZ  NOT NULL DEFAULT NOW()
 );
 
