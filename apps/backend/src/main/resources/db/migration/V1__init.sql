@@ -6,7 +6,9 @@ CREATE TABLE credit_applications (
     document_id         VARCHAR(50)     NOT NULL,
     requested_amount    DECIMAL(15, 2)  NOT NULL,
     monthly_income      DECIMAL(15, 2)  NOT NULL,
-    status              VARCHAR(30)     NOT NULL DEFAULT 'PENDING',
+    status              VARCHAR(30)     NOT NULL CHECK (
+        status IN ('PENDING', 'UNDER_REVIEW', 'APPROVED', 'REJECTED')
+    ),
     bank_account_number VARCHAR(100),
     bank_total_debt     DECIMAL(15, 2),
     bank_credit_score   INTEGER,
@@ -40,8 +42,12 @@ CREATE TYPE audit_source AS ENUM (
 CREATE TABLE application_status_history (
     id              UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
     application_id  UUID        NOT NULL REFERENCES credit_applications(id),
-    previous_status VARCHAR(30) NOT NULL,
-    new_status      VARCHAR(30) NOT NULL,
+    previous_status VARCHAR(30) NOT NULL CHECK (
+        previous_status IN ('PENDING', 'UNDER_REVIEW', 'APPROVED', 'REJECTED')
+    ),
+    new_status      VARCHAR(30) NOT NULL CHECK (
+        new_status IN ('PENDING', 'UNDER_REVIEW', 'APPROVED', 'REJECTED')
+    ),
     changed_by      VARCHAR(100) NOT NULL DEFAULT 'SYSTEM',
     source          audit_source NOT NULL DEFAULT 'SYSTEM',
     reason          TEXT,
