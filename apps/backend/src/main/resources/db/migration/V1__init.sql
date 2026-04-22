@@ -117,4 +117,4 @@ CREATE INDEX idx_status_history_application  ON application_status_history (appl
 
 -- Usuario admin por defecto (contraseña: admin123 — reemplazar antes de producción)
 INSERT INTO app_users (username, password_hash, role)
-VALUES ('admin', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'ADMIN');
+VALUES ('admin', '$2a$10$hOmr4A8dgkRl03P57ddCiujvsnQy5HdHZ58454P1P/BaAe0SBDNC2', 'ADMIN');
