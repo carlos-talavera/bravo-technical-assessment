@@ -1,4 +1,8 @@
-package com.charlie2code.bravotechnicalassessment.domain;
+package com.charlie2code.bravotechnicalassessment.domain.entity;
+
+import com.charlie2code.bravotechnicalassessment.domain.valueobject.ApplicationStatus;
+import com.charlie2code.bravotechnicalassessment.domain.valueobject.BankingInfo;
+import com.charlie2code.bravotechnicalassessment.domain.valueobject.CountryCode;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

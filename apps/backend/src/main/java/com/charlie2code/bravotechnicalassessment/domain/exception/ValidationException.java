@@ -1,4 +1,4 @@
-package com.charlie2code.bravotechnicalassessment.domain;
+package com.charlie2code.bravotechnicalassessment.domain.exception;
 
 public class ValidationException extends RuntimeException {
 
