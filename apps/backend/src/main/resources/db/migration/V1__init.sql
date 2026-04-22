@@ -30,12 +30,21 @@ CREATE TABLE job_queue (
 );
 
 -- Historial de cambios de estado para auditoría
+CREATE TYPE audit_source AS ENUM (
+  'API',
+  'WORKER',
+  'WEBHOOK',
+  'SYSTEM'
+);
+
 CREATE TABLE application_status_history (
     id              UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
     application_id  UUID        NOT NULL REFERENCES credit_applications(id),
-    previous_status VARCHAR(30),
+    previous_status VARCHAR(30) NOT NULL,
     new_status      VARCHAR(30) NOT NULL,
-    changed_by      VARCHAR(100),
+    changed_by      VARCHAR(100) NOT NULL DEFAULT 'SYSTEM',
+    source          audit_source NOT NULL DEFAULT 'SYSTEM',
+    reason          TEXT,
     changed_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
