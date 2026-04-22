@@ -13,7 +13,7 @@ CREATE TABLE credit_applications (
     bank_total_debt     DECIMAL(15, 2),
     bank_credit_score   INTEGER,
     bank_name           VARCHAR(100),
-    bank_currency       VARCHAR(10),
+    bank_currency       VARCHAR(3),
     created_at          TIMESTAMPTZ     NOT NULL DEFAULT NOW(),
     updated_at          TIMESTAMPTZ     NOT NULL DEFAULT NOW()
 );
