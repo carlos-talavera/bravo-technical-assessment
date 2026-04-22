@@ -19,11 +19,18 @@ CREATE TABLE credit_applications (
 );
 
 -- Cola de trabajos asíncronos — consumida con SELECT FOR UPDATE SKIP LOCKED
+CREATE TYPE job_status AS ENUM (
+  'PENDING',
+  'PROCESSING',
+  'DONE',
+  'FAILED'
+);
+
 CREATE TABLE job_queue (
     id              UUID            PRIMARY KEY DEFAULT gen_random_uuid(),
     application_id  UUID            NOT NULL REFERENCES credit_applications(id),
     job_type        VARCHAR(50)     NOT NULL,
-    status          VARCHAR(20)     NOT NULL DEFAULT 'PENDING',
+    status          job_status      NOT NULL DEFAULT 'PENDING',
     attempts        INTEGER         NOT NULL DEFAULT 0,
     payload         JSONB,
     error_message   TEXT,
