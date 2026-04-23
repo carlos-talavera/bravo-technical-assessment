@@ -7,6 +7,7 @@ import com.charlie2code.bravotechnicalassessment.application.usecase.ListCreditA
 import com.charlie2code.bravotechnicalassessment.application.usecase.UpdateApplicationStatusUseCase;
 import com.charlie2code.bravotechnicalassessment.domain.valueobject.ApplicationStatus;
 import com.charlie2code.bravotechnicalassessment.domain.valueobject.CountryCode;
+import com.charlie2code.bravotechnicalassessment.infrastructure.sse.SseEmitterRegistry;
 import com.charlie2code.bravotechnicalassessment.presentation.dto.CreditApplicationResponse;
 import com.charlie2code.bravotechnicalassessment.presentation.dto.CreateCreditApplicationRequest;
 import com.charlie2code.bravotechnicalassessment.presentation.dto.UpdateApplicationStatusRequest;
@@ -15,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.util.List;
 import java.util.UUID;
@@ -27,16 +29,19 @@ public class CreditApplicationController {
     private final GetCreditApplicationUseCase getUseCase;
     private final ListCreditApplicationsUseCase listUseCase;
     private final UpdateApplicationStatusUseCase updateStatusUseCase;
+    private final SseEmitterRegistry sseEmitterRegistry;
 
     public CreditApplicationController(
             CreateCreditApplicationUseCase createUseCase,
             GetCreditApplicationUseCase getUseCase,
             ListCreditApplicationsUseCase listUseCase,
-            UpdateApplicationStatusUseCase updateStatusUseCase) {
+            UpdateApplicationStatusUseCase updateStatusUseCase,
+            SseEmitterRegistry sseEmitterRegistry) {
         this.createUseCase = createUseCase;
         this.getUseCase = getUseCase;
         this.listUseCase = listUseCase;
         this.updateStatusUseCase = updateStatusUseCase;
+        this.sseEmitterRegistry = sseEmitterRegistry;
     }
 
     @PostMapping
@@ -75,5 +80,10 @@ public class CreditApplicationController {
             Authentication authentication) {
         var application = updateStatusUseCase.execute(id, request.newStatus(), authentication.getName());
         return ResponseEntity.ok(CreditApplicationResponse.from(application));
+    }
+
+    @GetMapping(value = "/events", produces = "text/event-stream")
+    public SseEmitter subscribe() {
+        return sseEmitterRegistry.subscribe();
     }
 }

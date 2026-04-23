@@ -1,6 +1,7 @@
 package com.charlie2code.bravotechnicalassessment.application.usecase;
 
 import com.charlie2code.bravotechnicalassessment.domain.entity.CreditApplication;
+import com.charlie2code.bravotechnicalassessment.domain.port.ApplicationEventPublisher;
 import com.charlie2code.bravotechnicalassessment.domain.port.AuditContext;
 import com.charlie2code.bravotechnicalassessment.domain.port.WebhookNotifier;
 import com.charlie2code.bravotechnicalassessment.domain.repository.CreditApplicationRepository;
@@ -17,14 +18,17 @@ public class UpdateApplicationStatusUseCase {
     private final CreditApplicationRepository repository;
     private final WebhookNotifier webhookNotifier;
     private final AuditContext auditContext;
+    private final ApplicationEventPublisher eventPublisher;
 
     public UpdateApplicationStatusUseCase(
             CreditApplicationRepository repository,
             WebhookNotifier webhookNotifier,
-            AuditContext auditContext) {
+            AuditContext auditContext,
+            ApplicationEventPublisher eventPublisher) {
         this.repository = repository;
         this.webhookNotifier = webhookNotifier;
         this.auditContext = auditContext;
+        this.eventPublisher = eventPublisher;
     }
 
     @Transactional
@@ -38,6 +42,7 @@ public class UpdateApplicationStatusUseCase {
 
         var saved = repository.save(application);
         webhookNotifier.notify(saved);
+        eventPublisher.publish(saved);
         return saved;
     }
 }
