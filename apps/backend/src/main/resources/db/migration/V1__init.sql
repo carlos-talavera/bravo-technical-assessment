@@ -94,12 +94,39 @@ CREATE TRIGGER trg_enqueue_on_insert
 -- Trigger: registra en historial cada cambio de estado
 CREATE OR REPLACE FUNCTION fn_record_status_change()
 RETURNS TRIGGER AS $$
+DECLARE
+v_source audit_source;
+    v_changed_by TEXT;
 BEGIN
     IF OLD.status IS DISTINCT FROM NEW.status THEN
-        INSERT INTO application_status_history (application_id, previous_status, new_status)
-        VALUES (NEW.id, OLD.status, NEW.status);
-    END IF;
-    RETURN NEW;
+
+        v_source := COALESCE(
+            current_setting('app.audit_source', true),
+            'SYSTEM'
+        )::audit_source;
+
+        v_changed_by := COALESCE(
+            current_setting('app.changed_by', true),
+            'SYSTEM'
+        );
+
+INSERT INTO application_status_history (
+    application_id,
+    previous_status,
+    new_status,
+    source,
+    changed_by
+)
+VALUES (
+           NEW.id,
+           OLD.status,
+           NEW.status,
+           v_source,
+           v_changed_by
+       );
+END IF;
+
+RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 

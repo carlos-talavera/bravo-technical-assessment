@@ -6,6 +6,7 @@ import com.charlie2code.bravotechnicalassessment.domain.repository.CreditApplica
 import com.charlie2code.bravotechnicalassessment.domain.valueobject.CountryCode;
 import com.charlie2code.bravotechnicalassessment.infrastructure.persistence.JobQueueRow;
 import com.charlie2code.bravotechnicalassessment.infrastructure.persistence.SpringDataJobQueueRepository;
+import jakarta.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -23,21 +24,32 @@ public class RiskEvaluationWorker {
     private final CreditApplicationRepository creditApplicationRepository;
     private final WebhookNotifier webhookNotifier;
     private final Map<CountryCode, CreditPolicy> policies;
+    private final EntityManager entityManager;
 
     public RiskEvaluationWorker(
             SpringDataJobQueueRepository jobQueueRepository,
             CreditApplicationRepository creditApplicationRepository,
             WebhookNotifier webhookNotifier,
-            Map<CountryCode, CreditPolicy> policies) {
+            Map<CountryCode, CreditPolicy> policies,
+            EntityManager entityManager) {
         this.jobQueueRepository = jobQueueRepository;
         this.creditApplicationRepository = creditApplicationRepository;
         this.webhookNotifier = webhookNotifier;
         this.policies = policies;
+        this.entityManager = entityManager;
     }
 
     @Scheduled(fixedDelay = 5000)
     @Transactional
     public void run() {
+        entityManager
+                .createNativeQuery("SET LOCAL app.audit_source = 'WORKER'")
+                .executeUpdate();
+
+        entityManager
+                .createNativeQuery( "SET LOCAL app.changed_by = 'risk-worker'")
+                .executeUpdate();
+
         jobQueueRepository.findPendingRiskEvaluationJobs().forEach(this::processJob);
     }
 
