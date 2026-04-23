@@ -16,8 +16,8 @@ public interface SpringDataJobQueueRepository extends JpaRepository<JobQueueRow,
             SELECT * FROM job_queue
             WHERE status = 'PENDING'
               AND job_type = 'RISK_EVALUATION'
-            LIMIT 5
             FOR UPDATE SKIP LOCKED
+            LIMIT 5
             """, nativeQuery = true)
     List<JobQueueRow> findPendingRiskEvaluationJobs();
 
