@@ -2,7 +2,7 @@ package com.charlie2code.bravotechnicalassessment.infrastructure.webhook;
 
 import com.charlie2code.bravotechnicalassessment.domain.entity.CreditApplication;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 public record WebhookPayload(
@@ -11,7 +11,7 @@ public record WebhookPayload(
         String status,
         String fullName,
         String documentId,
-        LocalDateTime updatedAt
+        Instant updatedAt
 ) {
     public static WebhookPayload from(CreditApplication application) {
         return new WebhookPayload(

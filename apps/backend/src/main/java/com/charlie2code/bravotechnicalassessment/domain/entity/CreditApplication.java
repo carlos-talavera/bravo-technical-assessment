@@ -5,7 +5,7 @@ import com.charlie2code.bravotechnicalassessment.domain.valueobject.BankingInfo;
 import com.charlie2code.bravotechnicalassessment.domain.valueobject.CountryCode;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 public class CreditApplication {
@@ -22,8 +22,8 @@ public class CreditApplication {
     private final Integer bankCreditScore;
     private final String bankName;
     private final String bankCurrency;
-    private final LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private final Instant createdAt;
+    private Instant updatedAt;
 
     private CreditApplication(
             UUID id,
@@ -38,8 +38,8 @@ public class CreditApplication {
             Integer bankCreditScore,
             String bankName,
             String bankCurrency,
-            LocalDateTime createdAt,
-            LocalDateTime updatedAt) {
+            Instant createdAt,
+            Instant updatedAt) {
         this.id = id;
         this.country = country;
         this.fullName = fullName;
@@ -64,7 +64,7 @@ public class CreditApplication {
             BigDecimal monthlyIncome,
             BankingInfo bankingInfo) {
 
-        var now = LocalDateTime.now();
+        var now = Instant.now();
         return new CreditApplication(
                 UUID.randomUUID(),
                 country,
@@ -96,8 +96,8 @@ public class CreditApplication {
             Integer bankCreditScore,
             String bankName,
             String bankCurrency,
-            LocalDateTime createdAt,
-            LocalDateTime updatedAt) {
+            Instant createdAt,
+            Instant updatedAt) {
 
         return new CreditApplication(
                 id, country, fullName, documentId,
@@ -112,7 +112,7 @@ public class CreditApplication {
                     "Cannot transition from " + this.status + " to " + newStatus);
         }
         this.status = newStatus;
-        this.updatedAt = LocalDateTime.now();
+        this.updatedAt = Instant.now();
     }
 
     public UUID getId()                    { return id; }
@@ -127,6 +127,6 @@ public class CreditApplication {
     public Integer getBankCreditScore()    { return bankCreditScore; }
     public String getBankName()            { return bankName; }
     public String getBankCurrency()        { return bankCurrency; }
-    public LocalDateTime getCreatedAt()    { return createdAt; }
-    public LocalDateTime getUpdatedAt()    { return updatedAt; }
+    public Instant getCreatedAt()    { return createdAt; }
+    public Instant getUpdatedAt()    { return updatedAt; }
 }

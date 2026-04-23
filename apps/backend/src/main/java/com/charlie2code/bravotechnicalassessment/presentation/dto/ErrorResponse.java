@@ -1,19 +1,19 @@
 package com.charlie2code.bravotechnicalassessment.presentation.dto;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Map;
 
 public record ErrorResponse(
         String message,
         int status,
         Map<String, String> errors,
-        LocalDateTime timestamp
+        Instant timestamp
 ) {
     public ErrorResponse(String message, int status) {
-        this(message, status, null, LocalDateTime.now());
+        this(message, status, null, Instant.now());
     }
 
     public ErrorResponse(String message, int status, Map<String, String> errors) {
-        this(message, status, errors, LocalDateTime.now());
+        this(message, status, errors, Instant.now());
     }
 }

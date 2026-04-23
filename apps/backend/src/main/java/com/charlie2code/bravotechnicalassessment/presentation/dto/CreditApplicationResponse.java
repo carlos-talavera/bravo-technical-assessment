@@ -3,7 +3,7 @@ package com.charlie2code.bravotechnicalassessment.presentation.dto;
 import com.charlie2code.bravotechnicalassessment.domain.entity.CreditApplication;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 public record CreditApplicationResponse(
@@ -16,8 +16,8 @@ public record CreditApplicationResponse(
         String status,
         String bankName,
         String bankCurrency,
-        LocalDateTime createdAt,
-        LocalDateTime updatedAt
+        Instant createdAt,
+        Instant updatedAt
 ) {
     public static CreditApplicationResponse from(CreditApplication application) {
         return new CreditApplicationResponse(

@@ -2,7 +2,7 @@ package com.charlie2code.bravotechnicalassessment.infrastructure.persistence;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 @Entity
@@ -24,7 +24,7 @@ public class AppUserRow {
     private UserRole role;
 
     @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
     protected AppUserRow() {}
 
