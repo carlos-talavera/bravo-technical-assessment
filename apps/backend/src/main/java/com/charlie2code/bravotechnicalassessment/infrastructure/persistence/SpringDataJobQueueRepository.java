@@ -6,20 +6,20 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface SpringDataJobQueueRepository extends JpaRepository<JobQueueRow, UUID> {
 
-    // Procesa hasta 5 trabajos por ejecución en esta instancia del worker.
     // SKIP LOCKED garantiza que instancias concurrentes no compitan por los mismos registros.
     @Query(value = """
             SELECT * FROM job_queue
             WHERE status = 'PENDING'
               AND job_type = 'RISK_EVALUATION'
             FOR UPDATE SKIP LOCKED
-            LIMIT 5
+            LIMIT 1
             """, nativeQuery = true)
-    List<JobQueueRow> findPendingRiskEvaluationJobs();
+    Optional<JobQueueRow> findNextPendingRiskEvaluationJob();
 
     @Modifying
     @Query(value = """
