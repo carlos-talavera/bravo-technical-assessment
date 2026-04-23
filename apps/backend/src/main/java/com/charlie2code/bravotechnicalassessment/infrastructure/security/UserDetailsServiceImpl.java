@@ -1,6 +1,6 @@
 package com.charlie2code.bravotechnicalassessment.infrastructure.security;
 
-import com.charlie2code.bravotechnicalassessment.infrastructure.persistence.AppUserRepository;
+import com.charlie2code.bravotechnicalassessment.infrastructure.persistence.SpringDataAppUserRepository;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -11,9 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private final AppUserRepository repository;
+    private final SpringDataAppUserRepository repository;
 
-    public UserDetailsServiceImpl(AppUserRepository repository) {
+    public UserDetailsServiceImpl(SpringDataAppUserRepository repository) {
         this.repository = repository;
     }
 
