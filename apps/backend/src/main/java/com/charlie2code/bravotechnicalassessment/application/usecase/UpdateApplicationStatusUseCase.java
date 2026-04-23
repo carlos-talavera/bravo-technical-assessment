@@ -33,11 +33,19 @@ public class UpdateApplicationStatusUseCase {
 
     @Transactional
     public CreditApplication execute(UUID id, ApplicationStatus newStatus, String actor) {
-        auditContext.set("API", actor);
-
         var application = repository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Application not found: " + id));
 
+        if (application.getStatus() == newStatus) {
+            return application;
+        }
+
+        if (application.getStatus().isTerminal()) {
+            throw new IllegalStateException(
+                    "Application is already in a terminal state: " + application.getStatus());
+        }
+
+        auditContext.set("API", actor);
         application.transitionTo(newStatus);
 
         var saved = repository.save(application);
