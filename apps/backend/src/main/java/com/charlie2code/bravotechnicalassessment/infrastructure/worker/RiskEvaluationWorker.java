@@ -1,6 +1,7 @@
 package com.charlie2code.bravotechnicalassessment.infrastructure.worker;
 
 import com.charlie2code.bravotechnicalassessment.domain.policy.CreditPolicy;
+import com.charlie2code.bravotechnicalassessment.domain.port.ApplicationEventPublisher;
 import com.charlie2code.bravotechnicalassessment.domain.port.AuditContext;
 import com.charlie2code.bravotechnicalassessment.domain.port.WebhookNotifier;
 import com.charlie2code.bravotechnicalassessment.domain.repository.CreditApplicationRepository;
@@ -23,6 +24,7 @@ public class RiskEvaluationWorker {
     private final SpringDataJobQueueRepository jobQueueRepository;
     private final CreditApplicationRepository creditApplicationRepository;
     private final WebhookNotifier webhookNotifier;
+    private final ApplicationEventPublisher eventPublisher;
     private final Map<CountryCode, CreditPolicy> policies;
     private final AuditContext auditContext;
 
@@ -30,11 +32,13 @@ public class RiskEvaluationWorker {
             SpringDataJobQueueRepository jobQueueRepository,
             CreditApplicationRepository creditApplicationRepository,
             WebhookNotifier webhookNotifier,
+            ApplicationEventPublisher eventPublisher,
             Map<CountryCode, CreditPolicy> policies,
             AuditContext auditContext) {
         this.jobQueueRepository = jobQueueRepository;
         this.creditApplicationRepository = creditApplicationRepository;
         this.webhookNotifier = webhookNotifier;
+        this.eventPublisher = eventPublisher;
         this.policies = policies;
         this.auditContext = auditContext;
     }
@@ -55,6 +59,7 @@ public class RiskEvaluationWorker {
             application.transitionTo(policy.evaluateRisk(application));
             creditApplicationRepository.save(application);
             webhookNotifier.notify(application);
+            eventPublisher.publish(application);
             jobQueueRepository.markDone(job.getId());
 
             log.info("Risk evaluation completed for application {} — status: {}",
