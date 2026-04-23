@@ -13,6 +13,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
@@ -68,6 +69,18 @@ public class GlobalExceptionHandler {
                 ex.getMessage(),
                 HttpStatus.UNPROCESSABLE_ENTITY.value()
         );
+    }
+
+    @ExceptionHandler(NoSuchElementException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleNotFound(NoSuchElementException ex) {
+        return new ErrorResponse(ex.getMessage(), HttpStatus.NOT_FOUND.value());
+    }
+
+    @ExceptionHandler(IllegalStateException.class)
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    public ErrorResponse handleIllegalState(IllegalStateException ex) {
+        return new ErrorResponse(ex.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY.value());
     }
 
     @ExceptionHandler(BadCredentialsException.class)
