@@ -63,6 +63,15 @@ public class RiskEvaluationTxProcessor {
         try {
             var application = creditApplicationRepository.findById(job.getApplicationId())
                     .orElseThrow(() -> new IllegalStateException("Application not found"));
+
+            if (application.getStatus().isTerminal()) {
+                log.info("Job {} skipped: application {} already in terminal state {}",
+                        job.getId(), application.getId(), application.getStatus());
+                jobQueueRepository.markDone(job.getId());
+
+                return Optional.empty();
+            }
+
             var policy = policies.get(application.getCountry());
             if (policy == null) {
                 throw new IllegalStateException("No policy for country " + application.getCountry());
