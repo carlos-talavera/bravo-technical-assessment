@@ -1,6 +1,8 @@
 package com.charlie2code.bravotechnicalassessment.domain.policy;
 
+import com.charlie2code.bravotechnicalassessment.domain.entity.CreditApplication;
 import com.charlie2code.bravotechnicalassessment.domain.exception.ValidationException;
+import com.charlie2code.bravotechnicalassessment.domain.valueobject.ApplicationStatus;
 import com.charlie2code.bravotechnicalassessment.domain.valueobject.BankingInfo;
 import com.charlie2code.bravotechnicalassessment.domain.valueobject.CountryCode;
 
@@ -34,5 +36,16 @@ public class MexicoCreditPolicy implements CreditPolicy {
             throw new ValidationException(
                     "Loan-to-income ratio exceeds the maximum allowed for MX applicants");
         }
+    }
+
+    // Puntaje mínimo aceptable para aprobación en México
+    private static final int MIN_CREDIT_SCORE = 650;
+
+    @Override
+    public ApplicationStatus evaluateRisk(CreditApplication application) {
+        Integer score = application.getBankCreditScore();
+        return (score != null && score >= MIN_CREDIT_SCORE)
+                ? ApplicationStatus.APPROVED
+                : ApplicationStatus.REJECTED;
     }
 }
