@@ -10,4 +10,8 @@ public enum ApplicationStatus {
             case APPROVED, REJECTED -> false;
         };
     }
+
+    public boolean isTerminal() {
+        return this == APPROVED || this == REJECTED;
+    }
 }
