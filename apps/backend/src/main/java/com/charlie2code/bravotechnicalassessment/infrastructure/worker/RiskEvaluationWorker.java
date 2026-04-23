@@ -1,6 +1,5 @@
 package com.charlie2code.bravotechnicalassessment.infrastructure.worker;
 
-import com.charlie2code.bravotechnicalassessment.domain.entity.CreditApplication;
 import com.charlie2code.bravotechnicalassessment.domain.policy.CreditPolicy;
 import com.charlie2code.bravotechnicalassessment.domain.port.WebhookNotifier;
 import com.charlie2code.bravotechnicalassessment.domain.repository.CreditApplicationRepository;
