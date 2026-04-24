@@ -33,6 +33,10 @@ public class UpdateApplicationStatusUseCase {
 
     @Transactional
     public CreditApplication execute(UUID id, ApplicationStatus newStatus, String actor) {
+        if (newStatus.isTerminal()) {
+            throw new IllegalStateException("Cannot manually update to a terminal state");
+        }
+
         var application = repository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Application not found: " + id));
 
