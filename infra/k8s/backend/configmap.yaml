@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend-config
+  namespace: bravo
+data:
+  SERVER_PORT: "8080"
+  DB_URL: "jdbc:postgresql://postgres:5432/bravo_credit"
+  REDIS_HOST: redis
+  REDIS_PORT: "6379"
+  JWT_EXPIRATION_MS: "86400000"
