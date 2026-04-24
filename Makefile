@@ -1,4 +1,4 @@
-.PHONY: dev dev-down build push deploy undeploy logs-backend logs-frontend
+.PHONY: dev dev-down setup run-backend run-frontend build push deploy undeploy logs-backend logs-frontend
 
 REGISTRY ?= localhost:5001
 TAG      ?= latest
@@ -11,6 +11,15 @@ dev:
 
 dev-down:
 	docker compose down -v
+
+setup:
+	cp -n apps/backend/.env.example apps/backend/.env
+
+run-backend:
+	cd apps/backend && ./mvnw spring-boot:run
+
+run-frontend:
+	cd apps/frontend && npm run dev
 
 build:
 	docker build -t $(BACKEND_IMAGE)  apps/backend/
